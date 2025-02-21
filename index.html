@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0&icon_names=settings" />
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div id="high-score"><h3>0</h3></div>
+    </nav>
+
+    <div class="app-container">
+        <div class="task-card-container">
+            <div class="header">
+                <h1>Task Manager</h1>
+                <div class="nav-buttons">
+                    <button type="button" id="open-task-pool-button"><img src="img/list_alt.png" alt=""></button>
+                    <button type="button" class="generate-task-cards-button"><img src="img/edit_square.png" alt=""></button>
+                    <button type="button" id="settings-button"><img src="img/settings.png" alt=""></button>
+                </div>
+            </div>
+            <div class="task-card-1">
+                <div class="tasks-section">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="task-pool-container" id="task-pool-window">
+            <div class="task-entry">
+              <div class="header">
+                    <h1>Task Pool</h1>
+                    <button type="button" id="close-pool-button"><img src="img/close.png"></button>
+                </div>
+                <div class="task-entry-section">
+                    <label for="task-input">Task</label>
+                    <input type="text" name="task-input" id="task-input">
+                    <label for="diff-input">Difficulty (1-5)</label>
+                    <input type="number" name="diff-input" id="diff-input">
+                    <label for="time-input">Time (mins)</label>
+                    <input type="number" name="time-input" id="time-input">
+                    <button type="button" id="add-task-button" onclick="addTask()">Add task</button>
+                </div>  
+            </div>
+            
+            
+            <ul id="task-pool">
+                
+            </ul>
+        </div>
+
+        <div class="settings" id="settings-window">
+            <button type="button" id="close-settings"><img src="img/close.png"></button>
+            <div class="settings-details">
+                <label for="max-card-time">Maximum Time per Card</label>
+                <input type="number" name="max-card-time" id="max-card-time" value="30">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
