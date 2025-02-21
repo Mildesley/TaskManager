@@ -1,87 +1,81 @@
-// Functions for opening and hiding windows
-document.getElementById("open-task-pool-button").addEventListener('click', ()=> {
-    document.getElementById("task-pool-window").style.display = "flex"
-})
+// Constants for DOM element IDs
+const TASK_POOL_WINDOW_ID = "task-pool-window";
+const SETTINGS_WINDOW_ID = "settings-window";
+const TASK_INPUT_ID = "task-input";
+const DIFF_INPUT_ID = "diff-input";
+const TIME_INPUT_ID = "time-input";
+const TASK_POOL_ID = "task-pool";
+const TASKS_SECTION_ID = "tasks-section";
+const MAX_CARD_TIME_ID = "max-card-time";
 
-document.getElementById("close-pool-button").addEventListener('click', ()=> {
-    document.getElementById("task-pool-window").style.display = "none"
-})
 
-document.getElementById("settings-button").addEventListener('click', ()=> {
-    document.getElementById("settings-window").style.display = "block"
-})
+// Helper function to get element by ID
+const getElement = (id) => document.getElementById(id);
 
-document.getElementById("close-settings").addEventListener('click', ()=> {
-    document.getElementById("settings-window").style.display = "none"
-})
+// Window management functions
+const showElement = (id) => getElement(id).style.display = "flex"; // Use flex for task pool?
+const hideElement = (id) => getElement(id).style.display = "none";
 
-// Function to add new tasks
-var tasks = [];
+// Event listeners for window controls
+getElement("open-task-pool-button").addEventListener('click', () => showElement(TASK_POOL_WINDOW_ID));
+getElement("close-pool-button").addEventListener('click', () => hideElement(TASK_POOL_WINDOW_ID));
+getElement("settings-button").addEventListener('click', () => showElement(SETTINGS_WINDOW_ID));
+getElement("close-settings").addEventListener('click', () => hideElement(SETTINGS_WINDOW_ID));
 
-const taskPool = document.getElementById("task-pool");
-const tasksSection = document.querySelector(".tasks-section");
+// Task management
+let tasks = [];
+
+const taskPool = getElement(TASK_POOL_ID);
+const tasksSection = document.querySelector(`.${TASKS_SECTION_ID}`); // Use CSS selector for consistency
 
 function addTask() {
-    let currentTask = document.getElementById("task-input").value;
-    let currentDiff = parseInt(document.getElementById("diff-input").value, 10);
-    let currentTime = parseInt(document.getElementById("time-input").value, 10);
+    const taskDesc = getElement(TASK_INPUT_ID).value;
+    const difficulty = parseInt(getElement(DIFF_INPUT_ID).value, 10);
+    const time = parseInt(getElement(TIME_INPUT_ID).value, 10);
 
-    // Prevent empty task addition
-    if (!currentTask || isNaN(currentDiff) || isNaN(currentTime)) {
+    if (!taskDesc || isNaN(difficulty) || isNaN(time)) {
         alert("Please provide valid task details.");
         return;
     }
 
-    let currentTaskObj = { desc: currentTask, diff: currentDiff, time: currentTime, status: 'open' };
-    tasks.push(currentTaskObj);
+    const newTask = { desc: taskDesc, diff: difficulty, time: time, status: 'open' };
+    tasks.push(newTask);
 
     // Clear input fields
-    document.getElementById("task-input").value = "";
-    document.getElementById("diff-input").value = "";
-    document.getElementById("time-input").value = "";
+    getElement(TASK_INPUT_ID).value = "";
+    getElement(DIFF_INPUT_ID).value = "";
+    getElement(TIME_INPUT_ID).value = "";
 
-    // Refresh the task list
     displayTasks();
 }
 
 function displayTasks() {
-    // Sort tasks by difficulty
-    tasks.sort(function (a, b) {
-        return a.diff - b.diff;
+    tasks.sort((a, b) => a.diff - b.diff);
+
+    taskPool.innerHTML = ""; // Clear task pool
+
+    tasks.forEach(task => {
+        const listItem = document.createElement("li");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        listItem.appendChild(checkbox);
+        listItem.append(` ${task.desc} (Difficulty: ${task.diff}, Time: ${task.time} mins)`);
+        taskPool.appendChild(listItem);
     });
-
-    // Clear the current task pool
-    taskPool.innerHTML = "";
-
-    // Rebuild the sorted task list
-    for (let i = 0; i < tasks.length; i++) {
-        const listEle = document.createElement("li");
-        const checkEle = document.createElement("input");
-        checkEle.setAttribute("type", "checkbox");
-        listEle.appendChild(checkEle);
-
-        listEle.append(` ${tasks[i].desc} (Difficulty: ${tasks[i].diff}, Time: ${tasks[i].time} mins)`);
-        taskPool.appendChild(listEle);
-    }
 }
 
-// Function to create cards dynamically
+// Card creation
 let currentCardIndex = 0;
 
 function createTaskCards() {
-    const maxCardTime = document.getElementById("max-card-time").value;
-    console.log(maxCardTime)
-
+    const maxCardTime = parseInt(getElement(MAX_CARD_TIME_ID).value, 10); // Parse as int
     tasksSection.innerHTML = "";
     currentCardIndex = 0;
 
     let currentCard = [];
     let currentCardTime = 0;
 
-    tasks.forEach(task => {
-        if (task.status === "completed") {
-            return;
-        }
+    tasks.filter(task => task.status !== "completed").forEach(task => { // Filter completed tasks early
         if (currentCardTime + task.time > maxCardTime) {
             renderCard(currentCard, currentCardTime);
             currentCard = [];
@@ -95,7 +89,6 @@ function createTaskCards() {
         renderCard(currentCard, currentCardTime);
     }
 
-    // Display only the first card
     updateCardVisibility();
 }
 
@@ -107,58 +100,67 @@ function renderCard(taskList, totalTime) {
     cardTitle.textContent = `Task Card ${tasksSection.children.length + 1}`;
     cardDiv.appendChild(cardTitle);
 
-    const TimesTable = document.createElement("table");
-    const headerRow = TimesTable.insertRow();
-    const headerCells = [10, 5, 2];
-    headerCells.forEach(text => {
-        const headerCell = headerRow.insertCell();
-        headerCell.textContent = text;
-    });
-    const dataRow = TimesTable.insertRow();
-    const dataCells = [totalTime, totalTime * 1.5, totalTime * 2];
-    dataCells.forEach(value => {
-        const dataCell = dataRow.insertCell();
-        dataCell.textContent = value;
+    // Score Buttons Creation
+    const timeButtonsDiv = document.createElement("div");
+    timeButtonsDiv.classList.add("time-buttons");
+
+    const scoresAndMultipliers = [
+        { score: 10, multiplier: 1 },
+        { score: 5, multiplier: 1.5 },
+        { score: 2, multiplier: 2 },
+    ];
+
+    scoresAndMultipliers.forEach(item => { 
+        console.log(item)
+        const timeButton = document.createElement("button");
+        timeButton.textContent = `${item.score}`;
+        timeButton.value = item.score;
+        timeButton.classList.add("time-score-button");
+
+        timeButton.addEventListener("click", () => {
+            const selectedScore = parseInt(timeButton.value, 10);
+            const selectedMultiplier = item.multiplier;
+            console.log("Selected Score: ", selectedScore);
+            console.log("Selected Multiplier: ", selectedMultiplier);
+
+            const calculatedTime = totalTime * selectedMultiplier;
+            console.log("Calculated Time:", calculatedTime);
+
+        });
+
+        timeButtonsDiv.appendChild(timeButton);
     });
 
-    cardDiv.appendChild(TimesTable);
+    cardDiv.appendChild(timeButtonsDiv);
 
+    // Task List Creation
     const taskListDiv = document.createElement("ul");
     taskListDiv.style.listStyleType = "none";
 
     taskList.forEach((task, index) => {
-        const taskItem = document.createElement("input");
-        taskItem.setAttribute("type", "checkbox");
-        taskItem.id = `task-${index}`;
-        taskItem.name = `task-${index}`;
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `task-${index}`;
+        checkbox.name = `task-${index}`;
 
-        const taskLabel = document.createElement("label");
-        taskLabel.setAttribute("for", `task-${index}`);
-        taskLabel.textContent = `${task.desc}`;
+        const label = document.createElement("label");
+        label.htmlFor = `task-${index}`; // Use htmlFor for label association
+        label.textContent = task.desc;
 
-        // Add event listener to style completed tasks
-        taskItem.addEventListener("change", () => {
-            if (taskItem.checked) {
-                taskLabel.style.textDecoration = "line-through";
-                taskLabel.style.color = "grey";
-                task.status = "completed";
-            } else {
-                taskLabel.style.textDecoration = "none";
-                taskLabel.style.color = "black";
-            }
+        checkbox.addEventListener("change", () => {
+            label.style.textDecoration = checkbox.checked ? "line-through" : "none";
+            label.style.color = checkbox.checked ? "grey" : "black";
+            task.status = checkbox.checked ? "completed" : "open"; // Update task status
         });
 
-        const breakLine = document.createElement("br");
-
-        taskListDiv.appendChild(taskItem);
-        taskListDiv.appendChild(taskLabel);
-        taskListDiv.appendChild(breakLine);
+        taskListDiv.appendChild(checkbox);
+        taskListDiv.appendChild(label);
+        taskListDiv.appendChild(document.createElement("br")); // Append br directly
     });
-
     cardDiv.appendChild(taskListDiv);
 
-    // Add button to navigate to the next card
     const nextCardButton = document.createElement("button");
+    nextCardButton.classList.add("next-card-button");
     nextCardButton.textContent = "Next Card";
     nextCardButton.addEventListener("click", () => {
         currentCardIndex++;
@@ -171,20 +173,17 @@ function renderCard(taskList, totalTime) {
 
 function updateCardVisibility() {
     const cards = document.querySelectorAll(".task-card");
-    cards.forEach((card, index) => {
-        card.classList.add("hidden"); // Hide all cards
-        if (index === currentCardIndex) {
-            card.classList.remove("hidden"); // Show only the current card
-        }
-    });
+    cards.forEach((card, index) => card.classList.toggle("hidden", index !== currentCardIndex)); // Use toggle for visibility
 
-    // Hide the "Next Card" button on the last card
-    if (currentCardIndex >= cards.length - 1) {
-        const lastCard = cards[cards.length - 1];
-        const nextButton = lastCard.querySelector("button");
-        if (nextButton) nextButton.style.display = "none";
+    // Hide "Next Card" button on the last card
+    const lastCard = cards[cards.length - 1];
+    if (lastCard) {
+        const nextButton = lastCard.querySelector(".next-card-button"); // Target by class
+        if (nextButton) {
+            nextButton.style.display = currentCardIndex >= cards.length - 1 ? "none" : "block";
+        }
     }
 }
 
-// Attach functionality to create cards button
-document.querySelector(".generate-task-cards-button").addEventListener("click", createTaskCards);
+
+getElement("generate-task-cards-button").addEventListener("click", createTaskCards);
