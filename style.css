@@ -1,34 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+/* CSS Variables for consistency */
+:root {
+  --primary-color: #E3EAF5;
+  --secondary-color: #233649;
+  --accent-color: #4B6587;
+  --sidebar-bg: rgba(43, 62, 80, 0.7);
+  --button-bg: var(--secondary-color);
+  --button-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --button-hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 10px;
   padding: 5px;
 }
-
 ::-webkit-scrollbar-track {
   background: rgba(30, 44, 63, 0.95); 
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #E3EAF5; 
+  background: var(--primary-color); 
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #1a2742; 
 }
 
+/* Global Styles */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  color: #E3EAF5;
+  color: var(--primary-color);
   background: radial-gradient(circle at top, #1a2742 0%, #0E1626 70%, #000000 100%);
   height: 100vh;
   overflow: hidden;
   background-attachment: fixed;
+  position: relative;
 }
 
-/* Subtle stars */
+/* Subtle stars overlay */
 body::after {
   content: '';
   position: absolute;
@@ -49,10 +62,11 @@ nav {
   top: 0;
   right: 0;
   height: 100%;
-  background-color: rgba(43, 62, 80, 0.7);
+  background-color: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  padding: 10px;
 }
 
 .menu {
@@ -60,9 +74,16 @@ nav {
   flex-direction: column;
 }
 
+/* High Score Display */
 #high-score {
   padding: 20px;
   text-align: center;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 /* App container styling */
@@ -77,7 +98,7 @@ nav {
 
 /* Card container and card */
 .task-card-container {
-  background-color: rgba(43, 62, 80, 0.7);
+  background-color: var(--sidebar-bg);
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   padding: 20px;
@@ -89,13 +110,13 @@ nav {
 .task-card-container h1 {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #E3EAF5;
+  color: var(--primary-color);
 }
 
 /* Task card styling */
 .task-card-1 {
   min-height: 400px;
-  background-color: rgb(75, 101, 135, 0.2);
+  background-color: rgba(75, 101, 135, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 15px;
@@ -104,31 +125,34 @@ nav {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Buttons */
+/* Buttons - New Flat Design with Subtle Feedback */
 button {
-  background-color: transparent;
-  color: #E3EAF5;
+  background-color: var(--button-bg);
   border: none;
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 10px 15px;
   font-size: 1rem;
   margin: 10px;
+  color: var(--primary-color);
+  box-shadow: var(--button-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
 }
-
 button:hover {
-  background-color: transparent;
-  transform: scale(1.3);
+  transform: translateY(-2px);
+  box-shadow: var(--button-hover-shadow);
 }
-
+button:active {
+  transform: translateY(0);
+}
 button img {
   width: 30px;
   height: 30px;
 }
 
-/* Task pool popup */
-.task-pool-container, .settings {
+/* Glass Look for Pop-Up Windows */
+.task-pool-container,
+.settings {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -138,15 +162,19 @@ button img {
   max-width: 1000px;
   max-height: 800px;
   transform: translate(-50%, -50%);
-  background-color: rgba(30, 44, 63, 0.95);
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 15px;
+  border: var(--glass-border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  color: #E3EAF5;
+  color: var(--primary-color);
   display: none;
   overflow: hidden;
   justify-content: space-between;
 }
 
+/* Header styling remains similar */
 .header {
   display: flex;
   justify-content: space-between;
@@ -163,14 +191,18 @@ button img {
   font-size: 1rem;
 }
 
+#close-pool-button {
+  margin-left: 50px;
+}
+
 .task-entry-section input {
   width: 100%;
   padding: 8px;
   margin: 5px 0;
   border: none;
   border-radius: 10px;
-  background-color: #233649;
-  color: #E3EAF5;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .task-entry {
@@ -198,8 +230,8 @@ button img {
   margin: 5px 0;
   border: none;
   border-radius: 10px;
-  background-color: #233649;
-  color: #E3EAF5;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .settings-details {
@@ -208,7 +240,7 @@ button img {
   align-items: center;
 }
 
-/* Starry night vibes */
+/* Utility Classes */
 .hidden {
   display: none;
 }
@@ -220,10 +252,63 @@ ul#task-pool {
 }
 
 ul#task-pool li {
-  background-color: #4B6587;
+  background-color: var(--accent-color);
   margin: 10px 0;
   padding: 10px;
   border-radius: 10px;
-  color: #E3EAF5;
+  color: var(--primary-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 840px) {
+  .app-container {
+    padding: 10px;
+    padding-top: 60px;
+  }
+  .task-card-container {
+    width: 95%;
+    max-width: 95%;
+    padding: 10px;
+  }
+
+  nav {
+    display: none;
+  }
+
+  #high-score {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    font-size: 1.2rem;
+    background-color: var(--secondary-color);
+    z-index: 1000;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  button {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .task-pool-container,
+  .settings {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 15px;
+    border-radius: 0;
+  }
+  
+  .task-entry {
+    width: 100%;
+  }
+  ul#task-pool {
+    width: 100%;
+  }
 }
