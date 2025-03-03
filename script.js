@@ -7,7 +7,15 @@ const TIME_INPUT_ID = "time-input";
 const TASK_POOL_ID = "task-pool";
 const TASKS_SECTION_ID = "tasks-section";
 const MAX_CARD_TIME_ID = "max-card-time";
+const HIGH_SCORE_TOTAL_ID = "high-score";
 
+// Variable to store the high score
+let highScoreTotal = 0;
+
+// Helper function to update the high score display
+function updateHighScoreDisplay() {
+    getElement(HIGH_SCORE_TOTAL_ID).innerHTML = highScoreTotal;
+}
 
 // Helper function to get element by ID
 const getElement = (id) => document.getElementById(id);
@@ -92,48 +100,75 @@ function createTaskCards() {
     updateCardVisibility();
 }
 
-function renderCard(taskList, totalTime) {
+function createCardElement(cardTitleText) {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("task-card", "hidden");
 
     const cardTitle = document.createElement("h3");
-    cardTitle.textContent = `Task Card ${tasksSection.children.length + 1}`;
+    cardTitle.textContent = cardTitleText;
     cardDiv.appendChild(cardTitle);
 
-    // Score Buttons Creation
+    return cardDiv;
+}
+
+function formatTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+}
+
+function createTimeButtons(scoresAndMultipliers, totalTime, onScoreSelected) {
     const timeButtonsDiv = document.createElement("div");
     timeButtonsDiv.classList.add("time-buttons");
 
-    const scoresAndMultipliers = [
-        { score: 10, multiplier: 1 },
-        { score: 5, multiplier: 1.5 },
-        { score: 2, multiplier: 2 },
-    ];
-
-    scoresAndMultipliers.forEach(item => { 
-        console.log(item)
+    scoresAndMultipliers.forEach(({ score, multiplier }) => {
         const timeButton = document.createElement("button");
-        timeButton.textContent = `${item.score}`;
-        timeButton.value = item.score;
+        const buttonTime = totalTime * multiplier;
+        const formattedTime = formatTime(buttonTime)
+
+        timeButton.innerHTML = `${score} <br> ${formattedTime}`;
+        timeButton.value = score;
         timeButton.classList.add("time-score-button");
 
         timeButton.addEventListener("click", () => {
-            const selectedScore = parseInt(timeButton.value, 10);
-            const selectedMultiplier = item.multiplier;
-            console.log("Selected Score: ", selectedScore);
-            console.log("Selected Multiplier: ", selectedMultiplier);
-
-            const calculatedTime = totalTime * selectedMultiplier;
-            console.log("Calculated Time:", calculatedTime);
-
+            const currentCard = timeButton.closest(".task-card");
+        
+            if (currentCard) {
+                const previousSelectedButton = currentCard.querySelector(".selected-time-button");
+        
+                // If a button was previously selected, remove its score from high score
+                if (previousSelectedButton) {
+                    highScoreTotal -= parseInt(previousSelectedButton.value, 10);
+                    previousSelectedButton.classList.remove("selected-time-button");
+                }
+        
+                // Add new score to high score
+                const newScore = parseInt(timeButton.value, 10);
+                highScoreTotal += newScore;
+                timeButton.classList.add("selected-time-button");
+        
+                // Update display
+                updateHighScoreDisplay();
+        
+                // Select all checkboxes and trigger change event
+                const checkboxes = currentCard.querySelectorAll("input[type='checkbox']");
+                checkboxes.forEach((checkbox) => {
+                    if (!checkbox.checked) {
+                        checkbox.checked = true;
+                        checkbox.dispatchEvent(new Event("change")); // Trigger event listener
+                    }
+                });
+            }
         });
-
+        
+        
         timeButtonsDiv.appendChild(timeButton);
     });
 
-    cardDiv.appendChild(timeButtonsDiv);
+    return timeButtonsDiv;
+}
 
-    // Task List Creation
+function createTaskListView(taskList) {
     const taskListDiv = document.createElement("ul");
     taskListDiv.style.listStyleType = "none";
 
@@ -144,25 +179,53 @@ function renderCard(taskList, totalTime) {
         checkbox.name = `task-${index}`;
 
         const label = document.createElement("label");
-        label.htmlFor = `task-${index}`; // Use htmlFor for label association
+        label.htmlFor = `task-${index}`;
         label.textContent = task.desc;
 
         checkbox.addEventListener("change", () => {
             label.style.textDecoration = checkbox.checked ? "line-through" : "none";
             label.style.color = checkbox.checked ? "grey" : "black";
-            task.status = checkbox.checked ? "completed" : "open"; // Update task status
+            task.status = checkbox.checked ? "completed" : "open";
         });
 
         taskListDiv.appendChild(checkbox);
         taskListDiv.appendChild(label);
-        taskListDiv.appendChild(document.createElement("br")); // Append br directly
+        taskListDiv.appendChild(document.createElement("br"));
     });
-    cardDiv.appendChild(taskListDiv);
 
+    return taskListDiv;
+}
+
+function createNextCardButton(onNext) {
     const nextCardButton = document.createElement("button");
     nextCardButton.classList.add("next-card-button");
     nextCardButton.textContent = "Next Card";
-    nextCardButton.addEventListener("click", () => {
+    nextCardButton.addEventListener("click", onNext);
+
+    return nextCardButton;
+}
+
+function renderCard(taskList, totalTime) {
+    const cardDiv = createCardElement(`Task Card ${tasksSection.children.length + 1}`);
+
+    const scoresAndMultipliers = [
+        { score: 10, multiplier: 1 },
+        { score: 5, multiplier: 1.5 },
+        { score: 2, multiplier: 2 },
+    ];
+
+    const timeButtonsDiv = createTimeButtons(scoresAndMultipliers, totalTime, (selectedScore) => {
+        console.log(selectedScore);
+        highScoreTotal += selectedScore;
+        updateHighScoreDisplay();
+    });
+
+    cardDiv.appendChild(timeButtonsDiv);
+
+    const taskListDiv = createTaskListView(taskList);
+    cardDiv.appendChild(taskListDiv);
+
+    const nextCardButton = createNextCardButton(() => {
         currentCardIndex++;
         updateCardVisibility();
     });
