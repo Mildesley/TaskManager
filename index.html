@@ -9,20 +9,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0&icon_names=settings" />
 </head>
 <body>
-
-    <nav class="sidebar">
-        <div id="high-score"></div>
-    </nav>
-
+    <!-- Main View -->
     <div class="app-container">
         <div class="task-card-container">
             <div class="header">
                 <h1>Task Manager</h1>
-                <div class="nav-buttons">
-                    <button type="button" id="open-task-pool-button"><img src="img/list_alt.png" alt=""></button>
-                    <button type="button" id="generate-task-cards-button"><img src="img/edit_square.png" alt=""></button>
-                    <button type="button" id="settings-button"><img src="img/settings.png" alt=""></button>
-                </div>
+                <button type="button" id="settings-button"><img src="img/settings.svg" alt=""></button>
+                <button type="button" id="help-button"><img src="img/help.svg" alt="" srcset=""></button>
+                <button type="button" id="open-task-pool-button">Task Pool</button>
+                <button type="button" id="generate-task-cards-button">Generate Cards</button>
+                <div id="highscore">0</div>
             </div>
             <div class="task-card-1">
                 <div class="tasks-section">
@@ -31,17 +27,18 @@
             </div>
         </div>
 
+        <!-- Task Pool View -->
         <div class="task-pool-container" id="task-pool-window">
             <div class="task-entry">
               <div class="header">
                     <h1>Task Pool</h1>
-                    <button type="button" id="close-pool-button"><img src="img/close.png"></button>
+                    <button type="button" class="close-button" id="close-pool-button"><img src="img/close.svg"></button>
                 </div>
                 <div class="task-entry-section">
                     <label for="task-input">Task</label>
                     <input type="text" name="task-input" id="task-input">
                     <label for="diff-input">Difficulty (1-5)</label>
-                    <input type="number" name="diff-input" id="diff-input">
+                    <input type="number" name="diff-input" id="diff-input" max="5">
                     <label for="time-input">Time (mins)</label>
                     <input type="number" name="time-input" id="time-input">
                     <button type="button" id="add-task-button" onclick="addTask()">Add task</button>
@@ -54,11 +51,44 @@
             </ul>
         </div>
 
+        <!-- Settings View -->
         <div class="settings" id="settings-window">
-            <button type="button" id="close-settings"><img src="img/close.png"></button>
+            <button type="button" class="close-button" id="close-settings"><img src="img/close.svg"></button>
             <div class="settings-details">
                 <label for="max-card-time">Maximum Time per Card</label>
                 <input type="number" name="max-card-time" id="max-card-time" value="30">
+            </div>
+        </div>
+
+        <!-- Help View -->
+        <div class="help" id="help-window">
+            <button type="button" class="close-button" id="close-help"><img src="img/close.svg"></button>
+            <div class="slide" id="slide-1">
+                <h2>Welcome to FocusFound To-Do List!</h2>
+                <p>Hey there! This tool is designed to help you tackle your to-do list in a smarter, more structured way. By breaking tasks into bite-sized sessions and organizing them by difficulty, you'll stay focused, motivated, and productive—without the overwhelm.</p>
+                <h2>Step 1: Build Your Complete Task List</h2>
+                <ul>
+                    <li>Click <strong>"Task Pool"</strong> to open the input window.</li>
+                    <li>Enter your task, how difficult it is, and a rough time estimate.</li>
+                    <li>Click <strong>"Add Task"</strong>—your tasks will be <strong>automatically sorted</strong> by difficulty.</li>
+                    <li>Once your list is ready, close the window (<img src="img/close.svg" alt="X"> in the top right).</li>
+                </ul>
+                <br><br><br>
+                <button class="next-button" data-target="slide-2">Next &rarr;</button>
+            </div>
+            
+            <div class="slide hidden" id="slide-2">
+                <h2>Step 2: Turn Your List into Actionable Steps</h2>
+                <ul>
+                    <li>Click <strong>"Generate Cards"</strong> to break tasks into focused 30-minute sessions.</li>
+                    <li>Each card includes a <strong>timer challenge</strong> with three target times—aim to beat them!</li>
+                    <li>After completing a session, click the button for the time you achieved to track your progress.</li>
+                    <li>Take a quick break, then hit <strong>"Next Card"</strong> and keep going!</li>
+                </ul>
+                <h2>Customize Your Experience</h2>
+                <p>Need longer or shorter sessions? Click <img src="img/settings.svg" alt="Settings"> and adjust the "Maximum Time Per Card." Tailor it to fit your workflow!</p>
+                <p>That’s it! Stay focused, challenge yourself, and enjoy the process. You’ve got this! 💪</p>
+                <button class="prev-button" data-target="slide-1">&larr; Back</button>
             </div>
         </div>
     </div>
