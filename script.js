@@ -1,6 +1,7 @@
 // Constants for DOM element IDs
 const TASK_POOL_WINDOW_ID = "task-pool-window";
 const SETTINGS_WINDOW_ID = "settings-window";
+const HELP_WINDOW_ID = "help-window";
 const TASK_INPUT_ID = "task-input";
 const DIFF_INPUT_ID = "diff-input";
 const TIME_INPUT_ID = "time-input";
@@ -29,6 +30,8 @@ getElement("open-task-pool-button").addEventListener('click', () => showElement(
 getElement("close-pool-button").addEventListener('click', () => hideElement(TASK_POOL_WINDOW_ID));
 getElement("settings-button").addEventListener('click', () => showElement(SETTINGS_WINDOW_ID));
 getElement("close-settings").addEventListener('click', () => hideElement(SETTINGS_WINDOW_ID));
+getElement("help-button").addEventListener('click', () => showElement(HELP_WINDOW_ID));
+getElement("close-help").addEventListener('click', () => hideElement(HELP_WINDOW_ID));
 
 // Task management
 let tasks = [];
@@ -250,3 +253,11 @@ function updateCardVisibility() {
 
 
 getElement("generate-task-cards-button").addEventListener("click", createTaskCards);
+
+// Help Menu slides
+document.querySelectorAll('.next-button, .prev-button').forEach(button => {
+    button.addEventListener('click', () => {
+        document.querySelectorAll('.slide').forEach(slide => slide.classList.add('hidden'));
+        document.getElementById(button.dataset.target).classList.remove('hidden');
+    });
+});
