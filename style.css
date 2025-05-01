@@ -1,283 +1,213 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap');
 
-/* CSS Variables for consistency */
 :root {
-  --primary-color: #E3EAF5;
-  --secondary-color: #233649;
-  --accent-color: #4B6587;
-  --sidebar-bg: rgba(43, 62, 80, 0.7);
-  --button-bg: var(--secondary-color);
-  --button-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --button-hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  --glass-bg: rgba(107, 201, 255, 0.5);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+  --color-background: #f2f2f7;
+  --color-surface: #ffffff;
+  --color-primary: #71c9ce;
+  --color-secondary: #e5e5ea;
+  --color-accent: #d1d1d6;
+  --color-text: #1c1c1e;
+
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-base: 16px;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --shadow-light: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  --transition-base: 0.2s ease-in-out;
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 10px;
-  padding: 5px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(30, 44, 63, 0.95); 
-}
-::-webkit-scrollbar-thumb {
-  background: var(--primary-color); 
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #1a2742; 
-}
-
-/* Global Styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  color: var(--primary-color);
-  background: radial-gradient(circle at top, #1a2742 0%, #0E1626 70%, #000000 100%);
+  background: var(--color-background);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
   height: 100vh;
   overflow: hidden;
-  background-attachment: fixed;
-  position: relative;
 }
 
-/* Subtle stars overlay */
-body::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(white 1px, transparent 1px);
-  background-size: 4px 4px;
-  opacity: 0.01;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.menu, .help {
-  display: flex;
-  flex-direction: column;
-}
-
-/* High Score Display */
-#highscore {
-  padding: 20px;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  grid-area: highscore;
-}
-
-#highscore::before{
-  content: "Highscore: ";
-}
-
-/* App container styling */
 .app-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 20px;
+  padding: var(--space-lg);
 }
 
-/* Card container and card */
 .task-card-container {
-  background-color: var(--sidebar-bg);
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  width: 80%;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-medium);
+  width: 90%;
   max-width: 600px;
+  padding: var(--space-lg);
   text-align: center;
 }
 
 .task-card-container h1 {
   font-size: 2rem;
-  margin-bottom: 20px;
-  color: var(--primary-color);
+  margin-bottom: var(--space-md);
 }
 
-/* Task card styling */
-.task-card-1 {
-  min-height: 400px;
-  background-color: rgba(75, 101, 135, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 20px;
-  margin-top: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Buttons - New Flat Design with Subtle Feedback */
-button {
-  background-color: var(--button-bg);
-  border: none;
-  border-radius: 10px;
-  padding: 10px 15px;
-  font-size: 1rem;
-  margin: 10px;
-  color: var(--primary-color);
-  box-shadow: var(--button-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-}
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--button-hover-shadow);
-}
-button:active {
-  transform: translateY(0);
-}
-button img {
-  width: 30px;
-  height: 30px;
-}
-
-/* Glass Look for Pop-Up Windows */
-.task-pool-container,
-.settings,
-.help {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  padding: 20px;
-  width: 100%;
-  height: 80%;
-  max-width: 1000px;
-  max-height: 800px;
-  transform: translate(-50%, -50%);
-  background: var(--sidebar-bg);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: 15px;
-  border: var(--glass-border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  color: var(--primary-color);
-  display: none;
-  overflow: hidden;
-  justify-content: space-between;
-}
-
-/* Header styling remains similar */
 .header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas: 
-  "title title blank settings how-to"
-  "task-pool task-pool blank generate generate"
-  "highscore highscore highscore highscore highscore";
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas:
+    "title title blank settings help"
+    "taskpool taskpool blank generate generate"
+    "highscore highscore highscore highscore highscore";
+  gap: var(--space-sm);
+  align-items: center;
 }
 
 .header h1 {
   grid-area: title;
 }
 
-#settings-button {
-  grid-area: settings;
+#settings-button { grid-area: settings; }
+#help-button { grid-area: help; }
+#open-task-pool-button { grid-area: taskpool; }
+#generate-task-cards-button { grid-area: generate; }
+#highscore {
+  grid-area: highscore;
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  padding-top: var(--space-sm);
 }
 
-#help-button {
-  grid-area: how-to;
+#highscore::before {
+  content: "Highscore: ";
 }
 
-#open-task-pool-button {
-  grid-area: task-pool;
+.task-card-1 {
+  background: var(--color-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  min-height: 300px;
+  margin-top: var(--space-md);
+  box-shadow: var(--shadow-light);
 }
 
-#generate-task-cards-button {
-  grid-area: generate;
+.task-card ul {
+  text-align: left;
 }
 
-.task-pool-container h1 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-.task-entry-section label {
-  display: block;
-  margin-top: 10px;
-  font-size: 1rem;
-}
-
-.close-button {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin: 20px;
-}
-
-.task-entry-section input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  border: none;
-  border-radius: 10px;
-  background-color: var(--secondary-color);
-  color: var(--primary-color);
-}
-
-.task-entry {
-  width: 40%;
+.tasks-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: var(--space-sm);
 }
 
-#add-task-button {
-  width: 100%;
-  margin-top: 10px;
+button {
+  background: var(--color-surface);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: 1rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
 }
 
-#task-pool {
-  width: 50%;
-  padding: 10px;
+button:hover {
+  background: var(--color-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
 }
 
-/* Settings Styling */
-.settings input {
-  width: 30%;
-  padding: 8px;
-  margin: 5px 0;
-  border: none;
-  border-radius: 10px;
-  background-color: var(--secondary-color);
-  color: var(--primary-color);
+button:active {
+  transform: translateY(0);
 }
 
-.settings-details {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+button img {
+  width: 24px;
+  height: 24px;
 }
 
-/* Utility Classes */
-.hidden {
+/* Popup Windows */
+.task-pool-container,
+.settings,
+.help {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  width: 90%;
+  height: 90%;
+  max-width: 900px;
+  max-height: 600px;
+  box-shadow: var(--shadow-medium);
   display: none;
 }
 
+.task-entry,
+.settings-details {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.task-entry input,
+.settings input {
+  width: 100%;
+  padding: var(--space-sm);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background: var(--color-secondary);
+  font-family: var(--font-family-base);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
 ul#task-pool {
+  width: 50%;
   list-style: none;
-  padding: 5px;
-  overflow-y: scroll;
+  padding: 20px 0 0 50px;
+  margin-top: var(--space-md);
+  overflow-y: auto;
+  max-height: 300px;
 }
 
 ul#task-pool li {
-  background-color: var(--accent-color);
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 10px;
-  color: var(--primary-color);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  background: var(--color-secondary);
+  margin-bottom: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-light);
 }
 
-/* Help Window */
-.settings, .help {
-  max-height: 700px;
-  max-width: 600px;
+.close-button {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
 }
