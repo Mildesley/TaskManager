@@ -8,7 +8,7 @@ const TIME_INPUT_ID = "time-input";
 const TASK_POOL_ID = "task-pool";
 const TASKS_SECTION_ID = "tasks-section";
 const MAX_CARD_TIME_ID = "max-card-time";
-const HIGH_SCORE_TOTAL_ID = "high-score";
+const HIGH_SCORE_TOTAL_ID = "highscore";
 
 // Variable to store the high score
 let highScoreTotal = 0;
@@ -27,6 +27,7 @@ const hideElement = (id) => getElement(id).style.display = "none";
 
 // Event listeners for window controls
 getElement("open-task-pool-button").addEventListener('click', () => showElement(TASK_POOL_WINDOW_ID));
+getElement("open-task-pool-button").addEventListener('click', () => displayTasks());
 getElement("close-pool-button").addEventListener('click', () => hideElement(TASK_POOL_WINDOW_ID));
 getElement("settings-button").addEventListener('click', () => showElement(SETTINGS_WINDOW_ID));
 getElement("close-settings").addEventListener('click', () => hideElement(SETTINGS_WINDOW_ID));
@@ -62,18 +63,39 @@ function addTask() {
 
 function displayTasks() {
     tasks.sort((a, b) => a.diff - b.diff);
+    taskPool.innerHTML = "";
 
-    taskPool.innerHTML = ""; // Clear task pool
-
-    tasks.forEach(task => {
+    tasks.forEach((task, index) => {
         const listItem = document.createElement("li");
+
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
+        checkbox.checked = task.status === "completed";
+        checkbox.id = `pool-task-${index}`;
+
+        const label = document.createElement("label");
+        label.htmlFor = `pool-task-${index}`;
+        label.textContent = `${task.desc} (Difficulty: ${task.diff}, Time: ${task.time} mins)`;
+
+        // Apply strikethrough if completed
+        if (task.status === "completed") {
+            label.style.textDecoration = "line-through";
+            label.style.color = "grey";
+        }
+
+        // Allow marking from this list too
+        checkbox.addEventListener("change", () => {
+            task.status = checkbox.checked ? "completed" : "open";
+            label.style.textDecoration = checkbox.checked ? "line-through" : "none";
+            label.style.color = checkbox.checked ? "grey" : "black";
+        });
+
         listItem.appendChild(checkbox);
-        listItem.append(` ${task.desc} (Difficulty: ${task.diff}, Time: ${task.time} mins)`);
+        listItem.appendChild(label);
         taskPool.appendChild(listItem);
     });
 }
+
 
 // Card creation
 let currentCardIndex = 0;
@@ -129,7 +151,7 @@ function createTimeButtons(scoresAndMultipliers, totalTime, onScoreSelected) {
         const buttonTime = totalTime * multiplier;
         const formattedTime = formatTime(buttonTime)
 
-        timeButton.innerHTML = `${score} <br> ${formattedTime}`;
+        timeButton.innerHTML = `Score: ${score} <br> Time: ${formattedTime}`;
         timeButton.value = score;
         timeButton.classList.add("time-score-button");
 
