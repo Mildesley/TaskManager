@@ -221,6 +221,15 @@ function createTaskListView(taskList) {
     return taskListDiv;
 }
 
+function createPreviousCardButton(onPrevious) {
+    const previousCardButton = document.createElement("button");
+    previousCardButton.classList.add("previous-card-button");
+    previousCardButton.textContent = "Previous Card";
+    previousCardButton.addEventListener("click", onPrevious);
+
+    return previousCardButton;
+}
+
 function createNextCardButton(onNext) {
     const nextCardButton = document.createElement("button");
     nextCardButton.classList.add("next-card-button");
@@ -250,6 +259,12 @@ function renderCard(taskList, totalTime) {
     const taskListDiv = createTaskListView(taskList);
     cardDiv.appendChild(taskListDiv);
 
+    const previousCardButton = createPreviousCardButton(() => {
+        currentCardIndex--;
+        updateCardVisibility();
+    });
+    cardDiv.appendChild(previousCardButton);
+
     const nextCardButton = createNextCardButton(() => {
         currentCardIndex++;
         updateCardVisibility();
@@ -262,6 +277,15 @@ function renderCard(taskList, totalTime) {
 function updateCardVisibility() {
     const cards = document.querySelectorAll(".task-card");
     cards.forEach((card, index) => card.classList.toggle("hidden", index !== currentCardIndex)); // Use toggle for visibility
+ 
+    // Hide "Previous Card" button on the first card
+    const firstCard = cards[0];
+    if (firstCard) {
+        const previousButton = firstCard.querySelector(".previous-card-button");
+        if (previousButton) {
+            previousButton.style.display = currentCardIndex >= 0 ? "none" : "block";
+        }
+    }
 
     // Hide "Next Card" button on the last card
     const lastCard = cards[cards.length - 1];
@@ -283,3 +307,63 @@ document.querySelectorAll('.next-button, .prev-button').forEach(button => {
         document.getElementById(button.dataset.target).classList.remove('hidden');
     });
 });
+
+/*----------------------
+----Stopwatch Script----
+------------------------ */
+let startBtn = document.getElementById('start');
+let pauseBtn = document.getElementById('pause');
+let resetBtn = document.getElementById('reset');
+
+let minute = 0;
+let second = 0;
+
+timer = false;
+
+startBtn.addEventListener('click', function() {
+    if (!timer) {
+        timer = true;
+        stopWatch();
+    } else {
+        //Do Nothing
+    }
+})
+
+pauseBtn.addEventListener('click', function() {
+    timer = false;
+})
+
+resetBtn.addEventListener('click', function() {
+    timer = false;
+    minute = 0;
+    second = 0;
+    document.getElementById('min').innerHTML = "00";
+    document.getElementById('sec').innerHTML = "00";
+})
+
+function stopWatch() {
+    if(timer) {
+        second++;
+
+        if (second == 60) {
+            minute++;
+            second = 0;
+        }
+
+        let minString = minute;
+        let secString = second;
+
+        if (minute < 10) {
+            minString = "0" + minString
+        }
+
+        if (secString < 10) {
+            secString = "0" + secString
+        }
+
+        document.getElementById('min').innerHTML = minString;
+        document.getElementById('sec').innerHTML = secString;    
+        setTimeout(stopWatch, 1000);
+    }
+
+}
