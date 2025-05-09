@@ -145,6 +145,7 @@ button img {
 .stopwatch-container {
   background-color: var(--color-primary);
   width: 65%;
+  max-width: 580px
   height: 140px;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
