@@ -183,6 +183,9 @@ function createTimeButtons(scoresAndMultipliers, totalTime, onScoreSelected) {
                         checkbox.dispatchEvent(new Event("change")); // Trigger event listener
                     }
                 });
+
+                // Pause Stopwatch Timer
+                timer = false;
             }
         });
         
