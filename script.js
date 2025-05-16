@@ -370,3 +370,10 @@ function stopWatch() {
     }
 
 }
+
+/*---------------------------
+----------Settings-----------
+---------------------------*/
+
+const SORTING_LABEL = document.getElementById('sort-label').innerHTML;
+
