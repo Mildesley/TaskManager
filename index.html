@@ -52,7 +52,7 @@
                 <div class="task-entry-section">
                     <label for="task-input">Task</label>
                     <input type="text" name="task-input" id="task-input">
-                    <label for="diff-input">Difficulty (1-5)</label>
+                    <label for="diff-input" id="sort-label">Difficulty (1-5)</label>
                     <input type="number" name="diff-input" id="diff-input" max="5">
                     <label for="time-input">Time (mins)</label>
                     <input type="number" name="time-input" id="time-input">
@@ -72,6 +72,16 @@
             <div class="settings-details">
                 <label for="max-card-time">Maximum Time per Card</label>
                 <input type="number" name="max-card-time" id="max-card-time" value="30">
+
+                <span>
+                    <span id="opt-diff">Difficulty</span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="opt-prio">Priority</span>
+                </span>
+                
             </div>
         </div>
 
